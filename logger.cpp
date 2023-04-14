@@ -59,7 +59,7 @@ void Logger::init(UART_HandleTypeDef* huart) {
 
 /**
  * @brief Enqueue a string into the send buffer
- * @note This method will be called in noth main thread and ISRs, so it has to be thread-safe
+ * @note This method will be called in both main thread and ISRs, so it has to be thread-safe
  */
 void Logger::enqueue(char* str, uint16_t length) {
 
@@ -77,7 +77,7 @@ void Logger::enqueue(char* str, uint16_t length) {
 
     if (write_pos != new_write_pos) {
 
-        // There are enough spaces to enqueue the string, start to enqueue
+        // There is enough space to enqueue the string, start to enqueue
         if (new_write_pos > write_pos) {
             // can be enqueued in a single loop
             for (uint16_t i = 0; i < length; i++) {
@@ -97,7 +97,7 @@ void Logger::enqueue(char* str, uint16_t length) {
             }
         }
     } else {
-        // The circular buffer is not big enough for this message, simply increase m_missed_count for debugging
+        // The available space is not enough for this message. Discard message and simply increase m_missed_count for debugging
         ATOMIC_INCH(m_missed_count);  // Increase the m_missed_count for debugging purpose
     }
     ATOMIC_DECH(m_enqueue_guard);     // Finish the enqueue progress
@@ -155,8 +155,7 @@ uint16_t Logger::formatSignedNum(char* buf, int32_t val) {
     char* start = buf;
     if (val < 0) {
         val = -val;
-        buf[0] = '-';
-        ++buf;
+        *(buf++) = '-';
     }
     uint16_t length = formatUnsignedNum(buf, (uint32_t)val);
     return buf + length - start;

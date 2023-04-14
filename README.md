@@ -16,7 +16,7 @@ This is a thread-safe and non-blocking logger with a small footprint for STM32 a
         - Peripheral Increment Address `Disabled` and Memory Increment Address `Enabled`
         - Use Fifo `Disable`
         - Set Data Width of both Peripheral and Memory to `Byte`
-        - 
+
 2. Initialize the logger with the UART handle
 
 ``` c++

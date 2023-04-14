@@ -216,7 +216,8 @@ uint16_t Logger::formatDouble(char* buf, double val) {
 uint16_t Logger::_strcpy(char* des, const char* src) {
     uint16_t i = 0;
     while (src[i] != '\0') {
-        des[i++] = src[i];
+        des[i] = src[i];
+        ++i;
     }
     return i;
 }
